@@ -1,19 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.mycompany.app;
 
 import java.io.BufferedReader;
@@ -100,9 +85,10 @@ public class SearchFiles {
     
     IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
     IndexSearcher searcher = new IndexSearcher(reader);
-    //searcher.setSimilarity(new BM25Similarity());
-    searcher.setSimilarity(new ClassicSimilarity());
+    searcher.setSimilarity(new BM25Similarity());
+    //searcher.setSimilarity(new ClassicSimilarity());
     Analyzer analyzer = new CustomAnalyzer();
+    //Analyzer analyzer = new StandardAnalyzer();
     String wordQuery = "";
 
     HashMap<String,Float> boosts = new HashMap<String,Float>();
@@ -191,35 +177,7 @@ public class SearchFiles {
     reader.close();
   }
 
-  private static int rankNormalization(float score){
-	if(score > 14){
-	   return 5;	
-	}
-	else if (score <=14 && score >= 11){
-	   return 4;
-	}
-	else if (score < 11 && score >= 9){
-	   return 3;
-	}
-	else if (score < 9 && score >= 6){
-	   return 2;
-	}
-	else{
-	   return 1;	
-	}
-	
-  }
 
-  /**
-   * This demonstrates a typical paging search scenario, where the search engine presents 
-   * pages of size n to the user. The user can then go to the next page if interested in
-   * the next hits.
-   * 
-   * When the query is executed for the first time, then only enough results are collected
-   * to fill 5 result pages. If the user wants to page beyond this limit, then the query
-   * is executed another time and all hits are collected.
-   * 
-   */
   public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, 
                                      int hitsPerPage, boolean raw, boolean interactive, PrintWriter writer) throws IOException {
  
